@@ -6,6 +6,7 @@ cavernWidth = len(grid[0])
 cavernLength = len(grid)
 vertDistances = {(0, 0): 0}
 adjacentVerts = {(0, 0): []}
+end = (cavernLength - 1, cavernWidth - 1)
 
 def findAdjacent(currentAdjacents):
     updatedAdj = defaultdict(list)
@@ -63,11 +64,24 @@ def checkSouth(Y, X, dict):
 def checkWest(Y, X, dict):
     if (Y, X - 1) not in vertDistances:
         return dict[(Y, X)].append((Y, X - 1))
+totalRisk = 0
+while True:
+    adjacentVerts = findAdjacent(adjacentVerts)
+    smallestVert = ''
+    smallestRisk = 100000000000
+    for k, v in adjacentVerts.items():
+        keyDist = vertDistances[k]
+        for vert in v:
+            Y, X = vert[0], vert[1]
+            risk = int(grid[Y][X])
+            totalRisk = keyDist + risk
+            if totalRisk < smallestRisk:
+                smallestRisk = totalRisk
+                smallestVert = (Y, X)
+                lastVert = k
 
-adjacentVerts = findAdjacent(adjacentVerts)
-for k, v in adjacentVerts.items():
-    keyDist = vertDistances[k]
-    for vert in v:
-        print(vert)
-        print(grid[vert[0]][vert[1]])
-        
+    vertDistances[smallestVert] = smallestRisk
+    adjacentVerts[smallestVert] = []
+    if smallestVert == end:
+        break
+print(vertDistances[(end)])
