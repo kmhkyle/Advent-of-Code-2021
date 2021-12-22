@@ -1,6 +1,39 @@
 from collections import defaultdict
 f = open('Day_15_Input.txt', 'r')
 grid = f.read().split('\n')
+baseGrid = grid.copy()
+newBases = []
+blank = []
+
+''' part two'''
+def genGrid(baseGrid, newBases, first: bool):
+    newGrid = baseGrid.copy()
+    updatedGrid = baseGrid.copy()
+    number = 0
+    for index in range(4):
+        changingGrid = []
+        for row in range(len(newGrid)):
+            updatedRow = ''
+            for num in newGrid[row]:
+                updatedNum = int(num) + 1
+                if updatedNum > 9:
+                    updatedNum = 1
+                updatedRow += str(updatedNum)
+        
+            updatedGrid[row] += updatedRow
+            changingGrid.append(updatedRow)
+        if first:
+            newBases.append(changingGrid)
+        
+        newGrid = changingGrid
+    return updatedGrid
+
+
+grid = genGrid(grid, newBases, True) 
+for base in newBases:
+    grid += genGrid(base, blank, False)   
+
+''' end part two, comment out above to run part one'''
 
 cavernWidth = len(grid[0])
 cavernLength = len(grid)
@@ -85,3 +118,5 @@ while True:
     if smallestVert == end:
         break
 print(vertDistances[(end)])
+
+'''part two take a while but it works '''
